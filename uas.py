@@ -1,8 +1,10 @@
 import kdf
 import db
+import sha256hasher
 
 
-g_hasher = kdf.hasher()
+#g_hasher = kdf.hasher()
+g_hasher = sha256hasher.sha256hasher()
 g_db = db.userdb()
 g_users = g_db.connect()
 
@@ -34,6 +36,9 @@ def registeruser():
     uname = input()
     print("Enter password")
     passw = input()
+
+    uname = uname.strip()
+    passw = passw.strip()
     if userexists(uname):
         print("ERROR: user name already exists")
         return
@@ -47,9 +52,14 @@ def login():
     uname = input()
     print("Enter password")
     passw = input()
-    
-    if not userexists(uname) or g_users[uname] != g_hasher.hashpassword(passw):
-        print("Username/password incorrect")
+    uname = uname.strip()
+    passw = passw.strip()
+    if not userexists(uname):
+        print("User name doesn't exist.")
+        return
+
+    if g_users[uname] != g_hasher.hashpassword(passw):
+        print("Password incorrect.")
         return
 
     print("Successfully loggedin")
@@ -78,13 +88,22 @@ def main():
         
 
 
-# def main1():
+def main1():
    
-#     h = kdf.hasher()
-#     hp = h.hashpassword("password1")
-#     hp = h.hashpassword("password2")
-#     print(h.verifypassword(hp,"password1"))
-#     print(h.verifypassword(hp,"password2"))
+    #h = kdf.hasher()
+    h = sha256hasher.sha256hasher()
+    hp1 = h.hashpassword("password1")
+    hp2 = h.hashpassword("password2")
+    print(hp1)
+    print(hp2)
+
+    hp1 = h.hashpassword("password1")
+    hp2 = h.hashpassword("password2")
+
+    print(hp1)
+    print(hp2)
+    print(h.verifypassword(hp1,"password1"))
+    print(h.verifypassword(hp1,"password2"))
 
 
 # def main2():
